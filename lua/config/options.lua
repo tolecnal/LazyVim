@@ -2,12 +2,33 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 --
-local is_tmux_session = vim.env.TERM_PROGRAM == "tmux" -- Tmux is its own clipboard provider which directly works.
--- TMUX documentation about its clipboard - https://github.com/tmux/tmux/wiki/Clipboard#the-clipboard
-if vim.env.SSH_TTY and not is_tmux_session then
+
+local term = vim.env.TERM or ""
+
+local osc52_terminals = {
+  ["xterm"] = true,
+  ["xterm-256color"] = true,
+  ["xterm-kitty"] = true,
+  ["alacritty"] = true,
+  ["screen"] = true,
+  ["tmux"] = true,
+  ["tmux-256color"] = true,
+}
+
+local function term_supports_osc52(termname)
+  for t, _ in pairs(osc52_terminals) do
+    if termname:find(t, 1, true) then
+      return true
+    end
+  end
+  return false
+end
+
+if term_supports_osc52(term) then
   local function paste()
     return { vim.fn.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
   end
+
   local osc52 = require("vim.ui.clipboard.osc52")
   vim.g.clipboard = {
     name = "OSC 52",
