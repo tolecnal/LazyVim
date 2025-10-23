@@ -3,7 +3,7 @@ return {
   "hrsh7th/nvim-cmp",
   dependencies = {
     -- other cmp sources
-    "tolecnal/icinga2-vim", -- Assuming you've placed your custom source in a path accessible by Lazy
+    "tolecnal/icinga2-nvim", -- Assuming you've placed your custom source in a path accessible by Lazy
   },
   opts = function(_, opts)
     table.insert(opts.sources, { name = "icinga2" })
